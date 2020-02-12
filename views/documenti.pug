@@ -1,0 +1,89 @@
+include header
+
+block content
+        head
+            style.
+                .datepicker-date-display {
+                    background-color: #03256C;
+                }
+
+                .datepicker-cancel, .datepicker-done {
+                    color: blue;
+                }
+
+                .datepicker-table td.is-today {
+                    color: blue;
+                }
+
+                .datepicker-table td.is-selected {
+                    color: white;
+                    background-color: blue;
+                }
+
+        body
+            // Richiedi estratto conto
+            form(method='post' action='/conto/richiestaEstrattoConto' style='margin-top: 25px;')
+                div.row
+                    div.input-field.col.s4.offset-s1
+                        select#meseEstrattoConto(required='required' name='meseEstrattoConto')
+                            option(value ='0')
+                                | Gennaio
+                            option(value ='1')
+                                | Febbraio
+                            option(value ='2')
+                                | Marzo
+                            option(value ='3')
+                                | Aprile
+                            option(value ='4')
+                                | Maggio
+                            option(value ='5')
+                                | Giugno
+                            option(value ='6')
+                                | Luglio
+                            option(value ='7')
+                                | Agosto
+                            option(value ='8')
+                                | Settembre
+                            option(value ='9')
+                                | Ottobre
+                            option(value ='10')
+                                | Novembre
+                            option(value ='11')
+                                | Dicembre
+                        label(for='meseEstrattoConto')
+                            | Mese estratto conto:
+                    div.input-field.col.s4
+                        select#annoEstrattoConto(required='required' name='annoEstrattoConto')
+                            option(value ='2019')
+                                | 2019
+                            option(value ='2020')
+                                | 2020
+                        label(for='annoEstrattoConto')
+                            | Anno estratto conto:
+                    div.input-field.col.s3
+                        button.waves-effect.waves-light.btn.blue.darken-4(type='submit' name='btn_richiedi' style='border-radius: 20px;')
+                            | richiedi
+
+            //Documenti
+            div.row#movimenti
+                div.card-panel.col.s10.offset-s1
+                    span.card-title
+                        h5 Documenti &ensp; &ensp; &ensp;
+                    div.card-content
+                        //Lista documenti
+                        ul.collection(style='border-radius: 15px;')
+                            each doc in documenti
+                                li.collection-item.avatar
+                                    i.material-icons.circle.red(style='margin-top: 12px; font-size: 30px;')
+                                        | picture_as_pdf
+                                    span.title
+                                        | Estratto conto
+                                    p
+                                        | Creato il:
+                                        br
+                                        | #{doc.data}
+                                    a.secondary-content.btn-floating.btn-large.waves-effect.waves-light.blue.darken-4.tooltipped(data-position='left' data-tooltip='Download' href="data:text/plain;charset=utf-8," + encodeURIComponent( doc.file ) download='EstrattoConto'+doc.data+'.pdf')
+                                        i.material-icons(style='font-size: 40px;')
+                                            | file_download
+
+include footer

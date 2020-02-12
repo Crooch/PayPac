@@ -1,0 +1,287 @@
+include header
+
+body
+    //Contenuto pagina per Desktop    AGGIUNGI MODAL AGGIUNGI METODO DI PAGAMENTO #aggiungiPagamento DESKTOP E MOBILE
+    div.contenuto-pagina
+
+        //Impaginazione prima riga
+        div.row#riga1
+            //Itestazione pagina utente
+            div.col.s12.center-align#benvenuto
+                h3 Ciao #{userData.nomeUtente}
+        //FINE Impaginazione prima riga
+
+        //Messaggi flash
+        div.row
+            p.center
+                .container
+                    != messages()
+
+        //Impaginazione seconda riga
+        div.row#riga2
+            //Saldo
+            div.col.s5.offset-s1#saldo
+                div.card-panel
+                    span.card-title
+                        h5 Saldo
+                    div.card-content
+                        p(style='font-size:35px; margin-top:-5px;')
+                            | #{separatoreCifre(userData.saldo)}
+                            i.material-icons
+                                | euro_symbol
+                        p(style='font-size:15px; color:gray; margin-top:-45px;')
+                            | Disponibile
+                        p
+                            a.waves-effect.waves-light.btn.blue.darken-4(href='/pagamenti#trasferisci' style='border-radius: 20px;')
+                                | Trasferisci denaro
+            //Invio e richiesta denaro
+            div.col.s5.center-align#pagamenti(style='margin-top: 60px; padding-left: 9%;')
+                div.row.center-align
+                    div.col.s3.offset-s1
+                        a.btn-floating.btn-large.waves-effect.waves-light.blue.darken-4(href='/pagamenti#invia')
+                            i.material-icons
+                                | arrow_upwardeuro_symbol
+                    div.col.s3
+                        a.btn-floating.btn-large.waves-effect.waves-light.blue.darken-4(href='/pagamenti#ricevi')
+                            i.material-icons
+                                | arrow_downwardeuro_symbol
+                    div.col.s3
+                        a.btn-floating.btn-large.waves-effect.waves-light.blue.darken-4(href='/pagamenti#pendenti')
+                            i.material-icons
+                                | scheduleeuro_symbol
+                div.row(style='font-size: 20px; font-weight: 600;')
+                    div.col.s3.offset-s1
+                        | invia
+                    div.col.s3
+                        | ricevi
+                    div.col.s3
+                        | richieste
+            //FINE Impaginazione seconda riga
+
+        //Impaginazione terza riga
+        div.row#riga3
+            //Riepilogo Movimenti
+            div.col.s5.offset-s1#movimenti
+                div.card-panel
+                    span.card-title
+                        h5
+                            | Attività recenti
+                    //Lista movimenti
+                    div.card-content
+                        ul.collection#listamovimenti(style='border-radius: 15px;')
+                            each movimento in userData.ultimiMovimenti
+                                li.collection-item.avatar
+                                    if(movimento.importo > 0)
+                                        i.material-icons.circle.green(style='margin-top: 12px;')
+                                            | arrow_upward
+                                        span.title
+                                            | #{movimento.nomeMitt}
+                                        p
+                                            | #{movimento.descrizione}
+                                            br
+                                            | #{prettyDate(movimento.data)}
+                                        p.secondary-content(style='margin-top: 15px; font-size: 30px; color: green;')
+                                            | #{separatoreCifre(movimento.importo)}
+                                            i.material-icons
+                                                | euro_symbol
+                                    else
+                                        i.material-icons.circle.red(style='margin-top: 12px;')
+                                            | arrow_downward
+                                        span.title
+                                            | #{movimento.nomeDest}
+                                        p
+                                            | #{movimento.descrizione}
+                                            br
+                                            | #{prettyDate(movimento.data)}
+                                            p.secondary-content(style='margin-top: 15px; font-size: 30px; color: red;')
+                                                | #{separatoreCifre(movimento.importo)}
+                                                i.material-icons
+                                                    | euro_symbol
+                        p
+                            a.waves-effect.waves-light.btn.blue.darken-4(href='conto/movimenti' style='border-radius: 20px;')
+                                | Vedi altre attività
+                    //FINE Riepilogo movimenti
+            //Conti e Carte collegate
+            div.col.s5(style='margin-left: 60px; margin-top: 30px;')
+                h5
+                    | Conti bancari e carte
+                br
+                //Lista Conti e Carte collegate
+                each conto in userData.contiCollegati
+                    div.row
+                        div.col.s1
+                            i.material-icons(style='font-size: 40px; padding-top: 4px;')
+                                | account_balance
+                        div.col.s10.left-align(style='border-bottom-style: solid; border-width: 1px; padding-bottom: 13px;')
+                            i(style='font-weight: 600; padding-left: 6px;')
+                                | Conto
+                                br
+                                i(style='padding-left: 6px;')
+                                    | IBAN: #{conto.iban}
+                each carta in userData.carteCollegate
+                    div.row
+                        div.col.s1
+                            i.material-icons(style='font-size: 40px; padding-top: 4px;')
+                                | credit_card
+                        div.col.s10.left-align(style='border-bottom-style: solid; border-width: 1px; padding-bottom: 13px;')
+                            i(style='font-weight: 600; padding-left: 6px;')
+                                | Carta
+                                br
+                                i(style='padding-left: 6px;')
+                                    | Carta numero: #{carta.pan}</i>
+                p
+                    a.waves-effect.waves-light.btn.blue.darken-4.modal-trigger(href='#aggiungiPagamento' style='border-radius: 20px; margin-top: 25px;')
+                        | Aggiungi metodo di pagamento
+                //FINE Conti e Carte collegate
+        //FINE Impaginazione terza riga
+
+    //FINE Contenuto pagina per Desktop
+
+
+    //Contenuto pagina per Mobile
+    div.contenuto-pagina-mobile
+
+        //Impaginazione prima riga
+        div.row#riga1
+            //Itestazione pagina utente
+            div.col.s12.center-align#benvenuto
+                h3
+                    | Ciao #{userData.nomeUtente}
+        //FINE Impaginazione prima riga
+
+        //Messaggi flash
+        div.row
+            p.center
+                .container
+                    != messages()
+
+        //Impaginazione seconda riga
+        div.row#riga2
+            //Saldo
+            div.col.s10.offset-s1#saldo
+                div.card-panel
+                    span.card-title
+                        h5
+                            | Saldo
+                    div.card-content
+                        p(style='font-size:35px; margin-top:-5px;')
+                            | #{separatoreCifre(userData.saldo)}
+                            i.material-icons
+                                | euro_symbol
+                        p(style='font-size:15px; color:gray; margin-top:-45px;')
+                            | Disponibile
+                        p
+                            a.waves-effect.waves-light.btn.blue.darken-4(href='/pagamenti#trasferisci' style='border-radius: 20px;')
+                                | Trasferisci denaro
+        //FINE Impaginazione seconda riga
+
+        //Impaginazione terza riga
+        div.row#riga3
+            //Invio e richiesta denaro
+            div.col.s10.offset-s1.center-align#pagamenti(style='margin-top: 60px; padding-left: 9%;')
+                div.row.center-align
+                    div.col.s3.offset-s1
+                        a.btn-floating.btn-large.waves-effect.waves-light.blue.darken-4(href='/pagamenti#invia')
+                            i.material-icons
+                                | arrow_upwardeuro_symbol
+                    div.col.s3
+                        a.btn-floating.btn-large.waves-effect.waves-light.blue.darken-4(href='/pagamenti#ricevi')
+                            i.material-icons
+                                | arrow_downwardeuro_symbol
+                    div.col.s3
+                        a.btn-floating.btn-large.waves-effect.waves-light.blue.darken-4(href='/pagamenti#pendenti')
+                            i.material-icons
+                                | scheduleeuro_symbol
+                div.row(style='font-size: 20px; font-weight: 600;')
+                    div.col.s3.offset-s1
+                        | invia
+                    div.col.s3
+                        | ricevi
+                    div.col.s3
+                        | richieste
+        //FINE Impaginazione terza riga
+
+        //Impaginazione quarta riga
+        div.row#riga4
+            //Riepilogo Movimenti
+            div.col.s10.offset-s1#movimenti
+                div.card-panel
+                    span.card-title
+                        h5
+                            | Attività recenti
+                    //Lista movimenti
+                    div.card-content
+                        ul.collection#listamovimenti(style='border-radius: 15px;')
+                            each movimento in userData.ultimiMovimenti
+                                li.collection-item.avatar
+                                    if(movimento.importo > 0)
+                                        i.material-icons.circle.green(style='margin-top: 12px;')
+                                            | arrow_upward
+                                        span.title
+                                            | #{movimento.nomeMitt}
+                                        p
+                                            | #{movimento.descrizione}
+                                            br
+                                            | #{prettyDate(movimento.data)}
+                                        p.secondary-content(style='margin-top: 15px; font-size: 30px; color: green;')
+                                            | #{separatoreCifre(movimento.importo)}
+                                            i.material-icons
+                                                | euro_symbol
+                                    else
+                                        i.material-icons.circle.red(style='margin-top: 12px;')
+                                            | arrow_downward
+                                        span.title
+                                            | #{movimento.nomeDest}
+                                        p
+                                            | #{movimento.descrizione}
+                                            br
+                                            | #{prettyDate(movimento.data)}
+                                        p.secondary-content(style='margin-top: 15px; font-size: 30px; color: red;')
+                                            | #{separatoreCifre(movimento.importo)}
+                                            i.material-icons
+                                                | euro_symbol
+                        p
+                            a.waves-effect.waves-light.btn.blue.darken-4(href='conto/movimenti' style='border-radius: 20px;')
+                                | Vedi altre attività
+            //FINE Riepilogo movimenti
+        //FINE Impaginazione quarta riga
+
+        //Impaginazione quinta riga
+        div.row#riga5
+            //Conti e Carte collegate
+            div.col.s11.offset-s1(style='margin-left: 60px; margin-top: 30px;')
+                h5
+                    | Conti bancari e carte
+                br
+            //Lista Conti e Carte collegate
+            each conto in userData.contiCollegati
+                div.row
+                    div.col.s1
+                        i.material-icons(style='font-size: 40px; padding-top: 4px;')
+                            | account_balance
+                    div.col.s10.left-align(style='border-bottom-style: solid; border-width: 1px; padding-bottom: 13px;')
+                        i(style='font-weight: 600; padding-left: 6px;')
+                            | Conto
+                            br
+                            i(style='padding-left: 6px;')
+                                | IBAN: #{conto.iban}
+            each carta in userData.carteCollegate
+                div.row
+                    div.col.s1
+                        i.material-icons(style='font-size: 40px; padding-top: 4px;')
+                            | credit_card
+                    div.col.s10.left-align(style='border-bottom-style: solid; border-width: 1px; padding-bottom: 13px;')
+                        i(style='font-weight: 600; padding-left: 6px;')
+                            | Carta
+                            br
+                            i(style='padding-left: 6px;')
+                                | Carta numero: #{carta.pan}</i>
+            div.row
+                div.col.s11.offset-s1
+                    a.waves-effect.waves-light.btn.blue.darken-4.modal-trigger(href='#aggiungiPagamento' style='border-radius: 20px; margin-top: 25px;')
+                        | Aggiungi metodo di pagamento
+            //FINE Conti e Carte collegate
+        //FINE Impaginazione quinta riga
+    //FINE Contenuto pagina per Mobile
+
+include footer

@@ -1,0 +1,118 @@
+include header
+
+block content
+    body
+        //Filtro ricerca
+        form(method='post' action='#' style='margin-top: 25px;')
+            div.row
+                div.input-field.col.s5.offset-s1
+                    input.datepicker.validate(type='text' placeholder="inserisci data" name='dataInizioRicerca' id='dataInizioRicerca')
+                    label(for='dataInizioRicerca')
+                        | Data inizio ricerca:
+                div.input-field.col.s5
+                    input.datepicker.validate(type='text' placeholder="inserisci data" name='dataFineRicerca' id='dataFineRicerca')
+                    label(for='dataFineRicerca')
+                        | Data fine ricerca:
+            div.row
+                div.input-field.col.s4.offset-s1
+                    select(name='tipoRicerca' id='tipoRicerca')
+                        option(value="0")
+                            | Entrate/Uscite
+                        option(value="1")
+                            | Solo Entrate
+                        option(value="2")
+                            | Solo Uscite
+                    label(for='tipoRicerca')
+                        | Tipologia movimento:
+                div.col.s6
+                    p.range-field
+                        label(for='impMin-slider')
+                            | Importo minimo:
+                        input(type='range' id='impMin-slider' name='impMinslider' min='0' max='5000' step='100' value='0')
+            div.row
+                div.input-field.col.s10.offset-s1
+                    button.waves-effect.waves-light.btn.blue.darken-4(type='submit' name='btn_rmovimenti' style='border-radius: 20px; margin-top: -50px;')
+                        | Avvia ricerca
+                        i.material-icons(style='font-size: 1em')
+                            | search
+            div.row
+                -if(movimenti.errormsg){
+                    div.col.s10.offset-s1(style='color: red; margin-top: -10px;')
+                        | ERRORE: #{movimenti.errormsg}
+                -} else {
+                    -if(filtro.tipo == 0){
+                    div.col.s10.offset-s1(style='margin-top: -10px;')
+                        | Movimenti dal: #{filtro.dataInizio} al: #{filtro.dataFine} con importo maggiore di #{filtro.maggioreDi}€
+                    -}
+                    -else if(filtro.tipo == 1){
+                    div.col.s10.offset-s1(style='margin-top: -10px;')
+                        | Entrate dal: #{filtro.dataInizio} al: #{filtro.dataFine} con importo maggiore di #{filtro.maggioreDi}€
+                    -}
+                    -else if(filtro.tipo == 2){
+                    div.col.s10.offset-s1(style='margin-top: -10px;')
+                        | Uscite dal: #{filtro.dataInizio} al: #{filtro.dataFine} con importo maggiore di #{filtro.maggioreDi}€
+                    -}
+                -}
+        //FINE Filtro ricerca
+
+        //Movimenti
+        div.row#movimenti
+            div.card-panel.col.s10.offset-s1
+                span.card-title
+                    h5
+                        |Movimenti
+                //Lista movimenti
+                div.card-content
+                    ul.collection(style='radius: 15px;')
+                        -if(movimenti[0]){
+                            each movimento in movimenti
+                                -if(movimento.importo > 0){
+                                    li.collection-item.avatar
+                                        i.material-icons.circle.green
+                                            | arrow_downward
+                                        span.title
+                                            | #{movimento.nomeMitt}
+                                        p
+                                            | #{movimento.descrizione}
+                                        br
+                                        | #{movimento.data}
+                                        p.secondary-content(style='margin-top: 15px; font-size: 20px; color: green;')
+                                            | +#{separatoreCifre(movimento.importo)}€
+                                -} else {
+                                    li.collection-item.avatar
+                                        i.material-icons.circle.red(style='margin-top: 12px;')
+                                            | arrow_upward
+                                        span.title
+                                            | #{movimento.nomeDest}
+                                        p
+                                            | #{movimento.descrizione}
+                                        br
+                                        | #{movimento.data}
+                                        p.secondary-content(style='margin-top: 15px; font-size: 20px; color: red;')
+                                            | #{separatoreCifre(movimento.importo)}€
+                                -}
+                        -} else {
+                            li.collection-item.avatar
+                                i.material-icons.circle.orange(style='margin-top: 12px;')
+                                    | error_outline
+                                span.title
+                                    | NON SONO STATI TROVATI MOVIMENTI
+                                p
+                                    | CON I CRITERI RICERCATI
+                                br
+                        -}
+        //FINE Movimenti
+
+        script.
+            $(document).ready(function () {
+                //Aggiunta datepicker
+                $('.datepicker').datepicker({
+                    format: 'dd/mm/yyyy',
+                    firstDay: 1,
+                    showClearBtn: true
+                });
+                //Aggiunta selettore tipo movimento
+                $('select').formSelect();
+            });
+
+include footer

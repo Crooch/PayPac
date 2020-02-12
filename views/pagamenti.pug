@@ -1,0 +1,404 @@
+include header
+
+body
+    //Messaggi flash
+    div.row
+        p.center
+            .container
+                != messages()
+    //Tab invia\ricevi
+    ul.tabs.row.col.s12#tabs-invia-ricevi
+        li.tab.col.s4
+            a(href='#trasferisci')
+                | Trasferisci denaro
+        li.tab.col.s4
+            a(href='#periodico')
+                |Pagamenti periodici
+        li.tab.col.s4
+            a.active(href='#link')
+                | Link di pagamento
+
+    //Tab trasferisci denaro
+    div.cols12#trasferisci
+        div.row.col.s12.center-align(style='margin-top: 90px; margin-bottom: 90px;')
+            a.btn-large.waves-effect.waves-light.blue.darken-4.modal-trigger(href='#bonifico')
+                span(style='font-size: 20px;')
+                    | Bonifico&nbsp;&nbsp;
+                i.material-icons(style='font-size: 20px;')
+                    | sendeuro_symbol
+        div.row.col.s12.center-align(style='margin-top: 90px; margin-bottom: 90px;')
+            a.btn-large.waves-effect.waves-light.blue.darken-4.modal-trigger(href='#ricarica')
+                span(style="font-size: 20px;")
+                    | Ricarica conto&nbsp;&nbsp;
+                i.material-icons(style='font-size: 20px;')
+                    | autoreneweuro_symbol
+
+        //Modal Bonifico
+        div.modal#bonifico
+            div.modal-content
+                h4
+                    |Bonifico
+                form.col.s12(method='post' action='/pagamenti/bonifico')
+                    div.row
+                        div.col.s4(style='margin-top: 10px;')
+                            | Seleziona metodo di pagamento:
+                        div.col.s8
+                            select#pagamentoBonifico(required='required' name='pagamentoBonifico')
+                                -if(userSettings.pagamentoPreferito){
+                                    option(value =userSettings.pagamentoPreferito)
+                                        | #{userSettings.pagamentoPreferito} - preferito
+                                -}
+                                option(value =userData.iban)
+                                    | #{userData.iban}
+                                each conto in userData.contiCollegati
+                                    option(value =conto.iban)
+                                        | #{conto.iban}
+                                each carta in userData.carteCollegate
+                                    option(value =carta.pan)
+                                        | #{carta.pan}
+                    div.row
+                        div.col.s2(style='margin-top: 10px;')
+                            | Inserisci l'IBAN:
+                        div.col.s10
+                            input.validate#ibanBonifico(type='text' required="required" minlength=27 maxlength=27 name='ibanBonifico')
+                            label(for='ibanBonifico')
+                                | IBAN
+                            span.helper-text(data-error="   L'IBAN è composto da 27 caratteri")
+                    div.row
+                        div.col.s3(style='margin-top: 10px;')
+                            | Inserisci nome/ragione sociale del destinatario:
+                        div.col.s9
+                            input.validate#nomeBonifico(required="required" type='text' name='nomeBonifico')
+                            label(for='nomeBonifico')
+                                | nome/ragione sociale
+                    div.row
+                        div.col.s3(style='margin-top: 10px;')
+                            | Inserisci causale:
+                        div.col.s9
+                            input.validate#causaleBonifico(required="required" maxlength=50 type='text' name='causaleBonifico')
+                            label(for='causaleBonifico')
+                                | causale
+                    div.row
+                        div.col.s3(style='margin-top: 10px;')
+                            | Inserisci importo:
+                        div.col.s8
+                            input.validate#importoBonifico(required='required' type='number' step="0.01" name='importoBonifico')
+                            label(for='importoBonifico')
+                                | importo
+                        div.col.s1
+                            i.material-icons(style='margin-top: 20px;')
+                                | euro_symbol
+                    div.row
+                        p.col.s10.offset-s1#importoBonificotxt(style='font-size: 20px;')
+                        br
+                        br
+                        center
+                            div.row
+                            button.col.s12.waves-effect.waves-light.btn.blue.darken-4(type='submit' name='btn_bonifico' style='border-radius: 20px;')
+                                | Procedi
+            div.modal-footer
+                a.modal-close.waves-effect.waves-green.btn-flat(href="#!")
+                    | Annulla
+
+        //Modal Ricarica conto
+        div.modal#ricarica
+            div.modal-content
+                h4
+                    | Ricarica conto
+                div.col.s12.center-align(style='margin-top: 10px;')
+                    br
+                    | Puoi ricaricare il conto PayPac solo tramite un conto bancario, di cui sei l'intestatrio, associato al tuo account
+                    br
+                    br
+                    form.col.s12(method='post' action='/pagamenti/ricaricaConto')
+                        div.row
+                            div.col.s4(style='margin-top: 10px;')
+                                | Seleziona metodo di pagamento:
+                            div.col.s8
+                                select#pagamentoRicarica(required='required' name='pagamentoRicarica')
+                                    -if(userSettings.pagamentoPreferito && userSettings.pagamentoPreferito != userData.iban){
+                                        option(value =userSettings.pagamentoPreferito)
+                                            | #{userSettings.pagamentoPreferito} - preferito
+                                    -}
+                                    each conto in userData.contiCollegati
+                                        option(value =conto.iban)
+                                            | #{conto.iban}
+                                    each carta in userData.carteCollegate
+                                        option(value =carta.pan)
+                                            | #{carta.pan}
+                        div.row
+                            div.col.s3(style='margin-top: 10px;')
+                                | Inserisci importo:
+                            div.col.s8
+                                input.validate#importoRicarica(required='required' type='number' step="0.01" name='importoRicarica')
+                                label(for='importoRicarica')
+                                    | importo
+                            div.col.s1
+                                i.material-icons(style='margin-top: 20px;')
+                                    | euro_symbol
+                        div.row
+                            p.col.s10.offset-s1#importoRicaricatxt(style='font-size: 20px;')
+                            br
+                            br
+                            center
+                        div.row
+                            button.col.s12.waves-effect.waves-light.btn.blue.darken-4(type='submit' name='btn_ricarica' style='border-radius: 20px;')
+                                | Procedi
+            div.modal-footer
+                a.modal-close.waves-effect.waves-green.btn-flat(href='#!')
+                    | Annulla
+
+    //Tab pagamenti periodici
+    div.col.s12#periodico
+        //Aggiungi pagamento periodico
+        div.row#listaPeriodici
+            div.card-panel.col.s10.offset-s1
+                span.card-title
+                    br
+                    h5
+                        a.btn-floating.btn.waves-effect.waves-light.blue.darken-4.modal-trigger(href='#aggiungiperiodico' style='margin: 0px 20px 0px 10px;')
+                            i.material-icons
+                                | add
+                        | Aggiungi pagamento periodico
+                    br
+                div.card-content
+                    //Lista pagamenti periodici
+                    ul.collection(style='border-radius: 15px;')
+                        -var contoAziendale;
+                        each periodico in pagamenti.pagamentiPeriodici
+                            -contoAziendale = periodico.contoaziendale;
+                            li.collection-item.avatar
+                                i.material-icons.circle.blue.darken-4(style='margin-top: 12px;')
+                                    | autorenew
+                                span.title
+                                    | #{contoAziendale.ragioneSociale}
+                                br
+                                | Inizio: #{periodico.dataInizio}
+                                br
+                                | Cadenza: #{periodico.cadenza} giorni
+                                p.secondary-content(style='margin-top: 15px; font-size: 20px; color: black;')
+                                    | #{periodico.importo}
+                                    i.material-icons(style='font-size: 20px;')
+                                        | euro_symbol
+                                    | &nbsp;&nbsp;&nbsp;&nbsp;
+                                    form(method='post' action='/pagamenti/eliminaPeriodico')
+                                        button.waves-effect.waves-light.btn.red.darken-1(type='submit' name='btn_eliminaPeriodico' value='#{periodico.id}' style='border-radius: 20px; margin-top: 5px;')
+                                            i
+                                            | Cancella
+
+        //Modal Aggiungi pagamento periodico
+        div.modal#aggiungiperiodico
+            div.modal-content
+                h4
+                    | Aggiungi pagamento periodico
+                form.col.s12(method='post' action='/pagamenti/aggiungiPeriodico')
+                    div.row
+                        div.col.s4(style='margin-top: 10px;')
+                            | Seleziona metodo di pagamento:
+                        div.col.s8
+                            select#pagamentoPeriodico(required='required' name='pagamentoPreferito')
+                                -if(userSettings.pagamentoPreferito){
+                                option(value =userSettings.pagamentoPreferito)
+                                    | #{userSettings.pagamentoPreferito} - preferito
+                                -}
+                                option(value =userData.iban)
+                                    | #{userData.iban}
+                                each conto in userData.contiCollegati
+                                    option(value =conto.iban)
+                                        | #{conto.iban}
+                                each carta in userData.carteCollegate
+                                    option(value =carta.pan)
+                                        | #{carta.pan}
+                    div.row
+                        div.col.s3(style='margin-top: 10px;')
+                            | Inserisci ragione sociale del destinatario:
+                        div.col.s9
+                            input.validate#nomePeriodico(required="required" type='text' name='nomePeriodico')
+                            label(for='nomePeriodico')
+                                | ragione sociale
+                    div.row
+                        div.col.s2(style='margin-top: 10px;')
+                            | Inserisci importo:
+                        div.col.s3
+                            input.validate#importoPeriodico(required='required' type='number' step="0.01" name='importoPeriodico')
+                            label(for='importoPeriodico')
+                                | importo
+                        div.col.s1
+                            i.material-icons(style='margin-top: 20px;')
+                                | euro_symbol
+                        div.col.s3(style='margin-top: 10px;')
+                            | Inserisci cadenza:
+                        div.col.s2
+                            input.validate#cadenzaPeriodico(required='required' type='number' step="1" name='cadenzaPeriodico')
+                            label(for='cadenzaPeriodico')
+                                | giorni
+                    div.row
+                        p.col.s10.offset-s1#importoPeriodicotxt(style='font-size: 20px;')
+                        br
+                        br
+                        center
+                            div.row
+                            button.col.s12.waves-effect.waves-light.btn.blue.darken-4(type='submit' name='btn_periodico' style='border-radius: 20px;')
+                                | Procedi
+            div.modal-footer
+                a.modal-close.waves-effect.waves-green.btn-flat(href="#!")
+                    | Annulla
+
+    //Tab link di pagamento
+    div#link
+        div.row
+                i.col.s12.center.material-icons(style='font-size: 20px; font-size: 75px; margin-bottom: -30px; margin-top: -10px;')
+                    | expand_more expand_more expand_more
+        ul.tabs.row.col.s12#tabs-link(style='margin-bottom: 20px;')
+            li.tab.col.s4
+                a(href='#invia')
+                    | Invio denaro
+            li.tab.col.s4
+                a(href='#ricevi')
+                    | Richiedi denaro
+            li.tab.col.s4
+                a(href='#pendenti')
+                    | Link pendenti
+
+        //Tab link di invio denaro
+        div#invia
+            br
+            br
+            form.col.s12(method='post' action='/pagamenti/creaLink')
+                div.row
+                    div.col.s3.offset-s1(style='margin-top: 10px;')
+                        | Inserisci nome/ragione sociale del destinatario:
+                    div.col.s7
+                        input.validate#nomeLinkInvio(required="required" type='text' name='nomeLinkInvio')
+                        label(for='nomeLinkInvio')
+                            | nome/ragione sociale
+                div.row
+                    div.col.s3.offset-s1(style='margin-top: 10px;')
+                        | Inserisci importo:
+                    div.col.s7
+                        input.validate#importoLinkInvio(required='required' type='number' step="0.01" name='importoLinkInvio')
+                        label(for='importoLinkInvio')
+                            | importo
+                    div.col.s1
+                        i.material-icons(style='margin-top: 20px;')
+                            | euro_symbol
+                div.row
+                    p.col.s10.offset-s1#importoLinkInviotxt(style='font-size: 20px;')
+                    br
+                    br
+                    center
+                    br
+                    center
+                        div.row
+                            button.col.s10.offset-s1.waves-effect.waves-light.btn.blue.darken-4(type='submit' name='btn_Link' value='invio' style='border-radius: 20px;')
+                                | Crea link
+
+        //Tab link ricezione denaro
+        div#ricevi
+            br
+            br
+            form.col.s12(method='post' action='/pagamenti/creaLink')
+                div.row
+                    div.col.s3.offset-s1(style='margin-top: 10px;')
+                        | Inserisci nome/ragione sociale del destinatario:
+                    div.col.s7
+                        input.validate#nomeLinkRichiesta(required="required" type='text' name='nomeLinkRichiesta')
+                        label(for='nomeLinkRichiesta')
+                            | nome/ragione sociale
+                div.row
+                    div.col.s3.offset-s1(style='margin-top: 10px;')
+                        | Inserisci importo:
+                    div.col.s7
+                        input.validate#importoLinkRichiesta(required='required' type='number' step="0.01" name='importoLinkRichiesta')
+                        label(for='importoLinkRichiesta')
+                            | importo
+                    div.col.s1
+                        i.material-icons(style='margin-top: 20px;')
+                            | euro_symbol
+                div.row
+                    p.col.s10.offset-s1#importoLinkRichiestatxt(style='font-size: 20px;')
+                    br
+                    br
+                    center
+                    br
+                    center
+                        div.row
+                            button.col.s10.offset-s1.waves-effect.waves-light.btn.blue.darken-4(type='submit' name='btn_Link' value='richiesta' style='border-radius: 20px;')
+                                | Crea link
+
+        //Tab link pendenti
+        div.col.s12#pendenti
+            div.row#listaPendenti
+                div.card-panel.col.s10.offset-s1
+                    div.card-content
+                        //Lista pagamenti periodici
+                        ul.collection(style='border-radius: 15px;')
+                            each val in [1, 2, 3, 4, 5]
+                                li.collection-item.avatar
+                                    i.material-icons.circle.blue.darken-4(style='margin-top: 12px;')
+                                        | link
+                                    span.title
+                                        | Destinatario
+                                    p
+                                        | Causale
+                                    br
+                                    | Inizio:19/02/2019
+                                    br
+                                    | Cadenza: 15 giorni
+                                    p.secondary-content(style='margin-top: 15px; font-size: 20px; color: black;')
+                                        | 18,50
+                                        i.material-icons(style='font-size: 20px;')
+                                            | euro_symbol
+                                        | &nbsp;&nbsp;&nbsp;&nbsp;
+                                        i.btn.red.darken-1
+                                            | Cancella
+
+        script.
+            var saldo = #{userData.saldo};
+
+            $("#importoBonifico").keyup(function () {
+                importoAggiornato = $("#importoBonifico").val();
+                saldofinale = saldo-importoAggiornato-2;
+                if($(this).val()=='')
+                    valoreInserito = 0;
+                else valoreInserito = $(this).val();
+                $('#importoBonificotxt').text("Saldo finale: " + saldo + "€ - " + valoreInserito + "-2€ = " + saldofinale +"€");
+            });
+
+            $("#importoRicarica").keyup(function () {
+                importoAggiornato = $("#importoRicarica").val();
+                saldofinale = saldo - importoAggiornato;
+                if ($(this).val() == '')
+                    valoreInserito = 0;
+                else valoreInserito = $(this).val();
+                $('#importoRicaricatxt').text("Saldo finale: " + saldo + "€ - " + valoreInserito + "€ = " + saldofinale + "€");
+            });
+
+            $("#importoPeriodico").keyup(function () {
+                importoAggiornato = $("#importoPeriodico").val();
+                saldofinale = saldo - importoAggiornato;
+                if ($(this).val() == '')
+                    valoreInserito = 0;
+                else valoreInserito = $(this).val();
+                $('#importoPeriodicotxt').text("Saldo finale: " + saldo + "€ - " + valoreInserito + "€ = " + saldofinale + "€");
+            });
+
+            $("#importoLinkInvio").keyup(function () {
+                importoAggiornato = $("#importoLinkInvio").val();
+                saldofinale = saldo - importoAggiornato;
+                if ($(this).val() == '')
+                    valoreInserito = 0;
+                else valoreInserito = $(this).val();
+                $('#importoLinkInviotxt').text("Saldo finale: " + saldo + "€ - " + valoreInserito + "€ = " + saldofinale + "€");
+            });
+
+            $("#importoLinkRichiesta").keyup(function () {
+                importoAggiornato = $("#importoLinkRichiesta").val();
+                saldofinale = saldo - importoAggiornato;
+                if ($(this).val() == '')
+                    valoreInserito = 0;
+                else valoreInserito = $(this).val();
+                $('#importoLinkRichiestatxt').text("Saldo finale: " + saldo + "€ - " + valoreInserito + "€ = " + saldofinale + "€");
+            });
+
+include footer

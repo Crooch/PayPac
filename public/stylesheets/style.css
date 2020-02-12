@@ -1,0 +1,127 @@
+/*desktop*/
+@media only screen and (min-width: 993px) {
+	body > div.contenuto-pagina-mobile{
+		display: none;
+	}
+	body > div.contenuto-pagina{
+		display: block;
+	}
+	.nav-wrapper > .brand-logo {
+		margin: 7px 7px 0px 20px;
+	}
+	.nav-wrapper > #desktop-nav {
+		margin-left: 100px;
+	}
+}
+/*tablet*/
+@media only screen and (min-width: 600px) and (max-width: 993px) {
+	.contenuto-pagina-mobile{
+		display: block;
+	}
+	.contenuto-pagina{
+		display: none;
+	}
+	.nav-wrapper > .brand-logo {
+		margin-top: 7px;
+	}
+}
+/*mobile*/
+@media only screen and (max-width: 600px) {
+	.contenuto-pagina-mobile{
+		display: block;
+	}
+	.contenuto-pagina{
+		display: none;
+	}
+	.nav-wrapper > .brand-logo {
+		margin-top: 3px;
+	}
+}
+/*generale*/
+body{
+	background-color: #e8f6fd;
+}
+.nav-wrapper {
+	background-color:white;
+}
+.navbar-fixed > nav > div > a > i {
+	color: blue;
+}
+.nav-wrapper > ul a {
+	color: blue;
+}
+/*.sidenav-overlay {
+	opacity: 0 !important;
+}*/
+::-webkit-scrollbar {
+	width: 5px;
+}
+::-webkit-scrollbar-track {
+	background: #FFF;
+	-webkit-box-shadow: inset 1px 1px 2px rgba(0,0,0,0.1);
+ }
+::-webkit-scrollbar-thumb {
+	background: blue;
+    -webkit-box-shadow: inset 1px 1px 2px rgba(0,0,0,0.2);
+}
+::-webkit-scrollbar-thumb:hover {
+    background: #2541B2;
+}
+::-webkit-scrollbar-thumb:active {
+    background: #03256C;
+    -webkit-box-shadow: inset 1px 1px 2px rgba(0,0,0,0.3);
+}
+.page-footer{
+	background-color: #FFF;
+}
+#movimenti > div > div > ul > li {
+	background: rgba(127, 148, 142, .3);
+}
+#movimenti > div > div > ul > li:nth-child(odd) {
+	background: rgba(206, 207, 199, .3)
+}
+.switch label input[type=checkbox]:checked+.lever {
+	background-color: #03256C;
+}
+
+.switch label input[type=checkbox]:checked+.lever:after {
+	background-color: blue;
+}
+input[type=range]+.thumb{
+    background-color: #03256C;
+}
+input[type=range]::-webkit-slider-thumb {
+    background-color: blue;
+}
+input[type=range]::-moz-range-thumb {
+    background-color: blue;
+}
+input[type=range]::-ms-thumb {
+    background-color: blue;
+}
+#notifiche {
+	margin-right: 5px;
+    width: 300px;
+    height: 100%;
+	border-radius: 20px;
+}
+ul.success li{
+	padding: 15px;
+	margin-bottom: 20px;
+	border: 1px solid transparent;
+	border-radius: 4px;
+	color: #3c763d;
+	background-color: #dff0d8;
+	border-color: #d6e9c6;
+	list-style: none;
+}
+ul.error li{
+	padding: 15px;
+	margin-bottom: 20px;
+	border: 1px solid transparent;
+	border-radius: 4px;
+	color: #a94442;
+	background-color: #f2dede;
+	border-color: #ebccd1;
+	list-style: none;
+}

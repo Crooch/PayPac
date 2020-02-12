@@ -1,0 +1,73 @@
+//Footer
+footer.page-footer
+    div.container
+        div.row
+            div.col.s12.center-align
+                img.responsive-img(style='width: 250px;' src='/images/logo.png')
+                p.black-text.text-lighten-4 Servizi bancari per le persone con cose migliori da fare!
+
+    div.footer-copyright
+        div.black-text.container
+            | ©2019 PayPac. Tutti i diritti riservati.
+
+//JavaScript alla fine del body per ottimizzare il caricamento
+//Funzione che formatta la data
+-function prettyDate(dateString){
+//trasforma la stringa in data
+-var date = new Date(dateString);
+-var t = date.toLocaleTimeString('it-IT');
+-var d = date.getDate();
+-var monthNames = [ "Gennaio", "Febbraio", "Marzo", "Aprile", "Maggio", "Giugno", "Luglio", "Agosto", "Settembre", "Ottobre", "Novembre", "Dicembre" ];
+-var m = monthNames[date.getMonth()];
+-var y = date.getFullYear();
+-return d+' '+m+' '+y+' - '+t;
+-}
+//Funzione che formatta le cifre
+-function separatoreCifre(x) {
+-var parts = x.toString().split(".");
+-parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+-return parts.join(".");
+-}
+script(src='/javascripts/materialize.js')
+script.
+    $(document).ready(function () {
+        //Aggiunta tooltip
+        $('.tooltipped').tooltip();
+        //Aggiunta sidenav mobile
+        $('.sidenav').sidenav({
+                closeOnClick: true
+            }
+        );
+        //Aggiunta modal
+        $('.modal').modal();
+        //Aggiunta opzioni
+        $('select').formSelect();
+        //Aggiunta tabs
+        $('.tabs').tabs();
+        //Aggiunta datepicker
+        $('.datepicker').datepicker({
+            format: 'dd/mm/yyyy',
+            firstDay: 1,
+            showClearBtn: true
+        });
+        //settaggio impostazoni attuali
+        document.getElementById('maxg-slider').value = #{userSettings.massimaleGiornaliero};
+        document.getElementById('notm-slider').value = #{userSettings.sogliaNotificaMovimenti};
+        if (userSettings.notificaMassimaleGiornaliero == 1) {
+            document.getElementById('mgck').checked;
+        }
+    });
+    let slider = document.getElementById('maxg-slider');
+    noUiSlider.create(slider, {
+        start: [20, 80],
+        connect: true,
+        step: 100,
+        orientation: 'horizontal', // 'horizontal' o 'vertical'
+        range: {
+            'min': 0,
+            'max': 1500
+        },
+        format: wNumb({
+            decimals: 0
+        })
+    });

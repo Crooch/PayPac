@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <mate charest="utf-8" />
+        <title>Estratto Conto</title>
+        <style>
+            table {
+              border-collapse: collapse;
+              border-spacing: 0;
+              width: 100%;
+              border: 1px solid #ddd;
+            }
+            
+            th, td {
+              text-align: left;
+              padding: 8px;
+            }
+            
+            tr:nth-child(even){background-color: #f2f2f2}
+            </style>
+    </head>
+    <body>
+        <h1>Estratto Conto</h1>
+        <ul style="list-style: none;">
+            <li>Titolare Conto: {{this.nomeUtente}}</li>
+            <li>Mese: {{this.mese}}</li>
+            <li>Anno: {{this.anno}}</li>
+            <br>
+        </ul>
+        <br>
+        <h2>Lista movimenti</h2>
+        <br>
+        <div style="overflow-x:auto;">
+            <table>
+                <tr>
+                    <td>
+                        Saldo iniziale:
+                    </td>
+                    <td></td>
+                    <td></td>
+                    <td>
+                        {{this.saldoIniziale}}
+                    </td>
+                </tr>
+                <tr>
+                    <th>Data</th>
+                    <th>Mittente</th>
+                    <th>Causale</th>
+                    <th>Importo</th>
+                </tr>
+                {{#each movimenti}}
+                <tr>
+                    <td>{{this.data}}</td>
+                    <td>{{this.mittente}}</td>
+                    <td>{{this.causale}}</td>
+                    <td>{{this.Importo}}</td>
+                </tr>
+                {{/each}}
+                <tr>
+                    <td>
+                        Saldo finale:
+                    </td>
+                    <td></td>
+                    <td></td>
+                    <td>
+                        {{this.saldoFinale}}
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </body>
+</html>

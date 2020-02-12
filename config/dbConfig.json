@@ -1,0 +1,33 @@
+{
+  "development": {
+    "username": "paypac",
+    "password": "CaLoSc",
+    "database": "paypac",
+    "host": "192.168.33.10",
+    "dialect": "mysql",
+    "define": {
+      "timestamps": false
+    }
+  },
+  "test": {
+    "username": "paypac",
+    "password": "CaLoSc",
+    "database": "paypac",
+    "host": "192.168.33.10",
+    "dialect": "mysql",
+    "define": {
+      "timestamps": false
+    }
+  },
+  "production": {
+    "username": "paypac",
+    "password": "CaLoSc",
+    "database": "paypac",
+    "host": "192.168.33.10",
+    "dialect": "mysql",
+    "logging": false,
+    "define": {
+      "timestamps": false
+    }
+  }
+}

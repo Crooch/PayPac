@@ -1,0 +1,22 @@
+doctype html
+html(lang='it')
+    head
+        title Error
+        style.
+            body {
+                display: flex;
+                min-height: 100vh;
+                flex-direction: column;
+            }
+
+            main {
+                flex: 1 0 auto;
+            }
+
+            body {
+                background: #blue;
+            }
+    body
+        h1= message
+        h2= error.status
+        pre #{error.stack}

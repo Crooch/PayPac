@@ -1,0 +1,245 @@
+doctype html
+html(lang='it')
+    head
+        title PayPac
+
+        //Importa Font Google Icon
+        link(href='https://fonts.googleapis.com/icon?family=Material+Icons' rel='stylesheet')
+
+        //Importa materialize.css
+        link(rel='stylesheet' href='/stylesheets/materialize.css'  media='screen,projection')
+
+        //Importa style.css
+        link(rel='stylesheet' href='/stylesheets/style.css')
+
+        //Comunica al browser che il sito è ottimizato per mobile
+        meta(name='viewport' content='width=device-width, initial-scale=1.0')
+
+        //Aggiunta di jquery
+        script(src='/javascripts/jquery.js')
+
+        //Aggiunta icone
+        link(rel='icon' href='/images/favicon.ico' type='image/x-icon')
+        link(rel='shortcut icon' href='/images/favicon.ico' type='image/x-icon')
+
+        style.
+            .input-field input[type=date]:focus + label,
+            .input-field input[type=text]:focus + label,
+            .input-field input[type=email]:focus + label,
+            .input-field input[type=password]:focus + label {
+                color: #e91e63;
+            }
+
+            .input-field input[type=date]:focus,
+            .input-field input[type=text]:focus,
+            .input-field input[type=email]:focus,
+            .input-field input[type=password]:focus {
+                border-bottom: 2px solid #e91e63;
+                box-shadow: none;
+            }
+
+            .datepicker-date-display {
+                background-color: #03256C;
+            }
+
+            .datepicker-cancel, .datepicker-done {
+                color: blue;
+            }
+
+            .datepicker-table td.is-today {
+                color: blue;
+            }
+
+            .datepicker-table td.is-selected {
+                color: white;
+                background-color: blue;
+            }
+
+            .tabs .tab a {
+                color: white;
+                background-color: #03256C;
+            }
+
+            .tabs .tab a:hover {
+                background-color: #eee;
+                color: #000;
+            }
+
+            .tabs .tab a.active {
+                background-color: blue;
+                color: white;
+            }
+
+            .tabs .indicator {
+                background-color: #DEB887;
+            }
+
+            .tabs .tab a:focus.active {
+                background-color: blue;
+            }
+
+    body
+        //Barra di navigazione
+        div.navbar-fixed
+            nav
+                div.nav-wrapper
+                    img(src='/images/icon.png' alt='logo' height='50' width='50' class='brand-logo')
+                    a(href='#' data-target='mobile-nav' class='sidenav-trigger')
+                        i.material-icons menu
+                    ul.left.hide-on-med-and-down#desktop-nav
+                        li(class=(title === 'Home' ? 'active' : '')): a(href='/conto') Riepilogo
+                        li(class=(title === 'Movimenti' ? 'active' : '')): a(href='/conto/movimenti') Cronologia
+                        li(class=(title === 'Invia/Ricevi Denaro' ? 'active' : '')): a(href='/pagamenti') Invia e richiedi
+                        li(class=(title === 'Documenti' ? 'active' : '')): a(href='/conto/documenti') Documenti
+                    ul.right
+                        li: a.modal-trigger(href='#notifiche')
+                            i.material-icons.tooltipped(data-position='left' data-tooltip='Notifiche') notifications_none
+                        li: a.modal-trigger(href='#impostazioni')
+                            i.material-icons.tooltipped(data-position='bottom' data-tooltip='Impostazioni') settings
+                        li: a.modal-trigger(href='#confermauscita')
+                            i.material-icons.tooltipped(data-position='left' data-tooltip='Esci') power_settings_new
+        ul.sidenav#mobile-nav
+            li(class=(title === 'Home' ? 'active' : '')): a(href='/conto') Riepilogo
+            li(class=(title === 'Movimenti' ? 'active' : '')): a(href='/conto/movimenti') Cronologia
+            li(class=(title === 'Invia/Ricevi Denaro' ? 'active' : '')): a(href='/pagamenti') Invia e richiedi
+            li(class=(title === 'Documenti' ? 'active' : '')): a(href='/conto/documenti') Documenti
+        //FINE Barra di navigazione
+
+        //Modal Notifiche
+        div.modal#notifiche
+            div.modal-content(style='margin-top: -25px;')
+                h5(style='padding-bottom: 20px;') Notifiche
+                each notifica in notifiche
+                    div.row(style='border-bottom: 1px solid;')
+                        div.col.s3(style='font-size: 12px;')
+                            | #{notifica.data} <br>
+                        div.col.s8.offset-s1(style='color: blue; padding-bottom: 10px;')
+                            | #{notifica.descrizione}
+
+        //Modal Impostazioni
+        div.modal#impostazioni
+            div.modal-content
+                //Tab profilo\impostazioni
+                div.row
+                    ul.tabs.row.col.s12#tabs-profilo-impostazioni
+                        li.tab.col.s6
+                            a(href='#tabprofilo')
+                                | Profilo
+                        li.tab.col.s6
+                            a(href='#tabimpostazioni')
+                                | Impostazioni
+                    //Tab Profilo
+                    div.col.s12#tabprofilo
+                        br
+                        h4 INFORMAZIONI PROFILO
+                        br
+                        form.col.s12(method='post' action='/conto/aggiornaProfilo')
+                            div.row
+                                div.input-field.col.s12
+                                    input.validate(type='email' placeholder="email" name='newemail' id='newemail' required='' aria-required='true' value=userData.email)
+                                    label(for='newemail')
+                                        | Email:
+                            div.row
+                                div.input-field.col.s6
+                                    input.validate(type='password' minlength=8 placeholder="password" name='newpassword' id='newpassword')
+                                    label(for='newpassword')
+                                        | Nuova password:
+                                    span.helper-text(data-error='minimo 8 caratteri')
+                                div.input-field.col.s6
+                                    input(type='password' minlength=8 placeholder="conferma password" name='confermapassword' id='confermapassword')
+                                    label(for='confermapassword')
+                                        | Conferma nuova password:
+                                    span.helper-text(data-error='minimo 8 caratteri')
+                            div.row
+                                div.input-field.col.s6
+                                    input.validate(type='text' placeholder="telefono" name='newntel' id='newntel' value=userData.telefono)
+                                    label(for='newntel')
+                                        | Numero di telefono: (facoltativo)
+                                div.input-field.col.s6
+                                    input.validate(type='text' placeholder="id telegram" name='newidtel' id='newidtel' value=userData.idTelegram)
+                                    label(for='newidtel')
+                                        | id Telegram per recezione notifiche: (facoltativo)
+                                    //valore da passare nella richiesta POST per riconoscere il tipo di profilo selezionato
+                                    input(type='hidden' name='tipoprofilo' value=userData.tipo id='tipoprofilo')
+
+                                -if(userData.tipo == 0){
+                                    //Dati conto personale
+                                    div.col.s12#personale
+                                        div.input-field.row.col.s6.center-align
+                                            input.validate(type='text' placeholder="nome intestatario" name='newnomeint' id='newnomeint' required='' aria-required='true' value=userData.nome)
+                                            label(for='newnomeint')
+                                                | Nome:
+                                        div.input-field.row.col.s6.center-align
+                                            input.validate(type='text' placeholder="cognome intestatario" name='newcognomeint' id='newcognomeint' required='' aria-required='true' value=userData.cognome)
+                                            label(for='newcognomeint')
+                                                | Cognome:
+                                        div.input-field.row.col.s6.center-align
+                                            input.validate(type='text' placeholder='codice fiscale' name='newcf' id='newcf' required='' aria-required='true' value=userData.cf)
+                                            label(for='newcf')
+                                                | Codice fiscale:
+                                        div.input-field.row.col.s6.center-align
+                                            input.datepicker.validate(type='text' placeholder='inserisci data' name='newdatan' id='newdatan' required='' aria-required='true' value=userData.dataN)
+                                            label(for='newdatan')
+                                                | Data di nascita:
+                                -} else {
+                                    //Dati conto aziendale
+                                    div.col.s12#aziendale
+                                        div.input-field.row.col.s6.center-align
+                                            input.validate(type='text' placeholder='ragione sociale' name='newragsociale' id='newragsociale' required='' aria-required='true' value=userData.ragSoc)
+                                            label(for='newragsociale')
+                                                | Ragione Sociale:
+                                        div.input-field.row.col.s6.center-align
+                                            input.validate(type='text' placeholder='partita iva' name='newpiva' id='newpiva' required='' aria-required='true' value=userData.partitaIva)
+                                            label(for='newpiva')
+                                                | Partita Iva:
+                                -}
+                            br
+                            center
+                                div.row
+                                    button(type='submit' name='btn_aggiorna' class='col s12 waves-effect waves-light btn blue darken-4' style='border-radius: 20px;') Salva
+
+                    //Tab Impostazioni
+                    div.col.s12#tabimpostazioni
+                        br
+                        h4 IMPOSTAZIONI
+                        br
+                        form.col.s12(method='post' action='/conto/aggiornaImpostazioni')
+                            div.row
+                                div.col.s12
+                                    | Massimale giornaliero: (attuale: #{userSettings.massimaleGiornaliero}€)
+                                    div.switch#mg
+                                        label
+                                            | NO
+                                            input(type='checkbox' id='maxg-switch' name='maxgswitch' checked=userSettings.notificaMassimaleGiornaliero)
+                                            span.lever
+                                            | SI
+                                    p.range-field
+                                        input(type='range' id='maxg-slider' name='maxgslider' min='0' max='1500' step='100')
+                            div.row
+                                div.col.s12
+                                    | Notifica movimenti:
+                                    div.switch#nmov
+                                        label
+                                            | NO
+                                            input(type='checkbox' id='notm-switch' name='notmswitch' checked=userSettings.notificaMovimenti)
+                                            span.lever
+                                            | SI
+                                    | Soglia di notifica movimenti: (attuale: > di #{userSettings.sogliaNotificaMovimenti}€)
+                                    p.range-field
+                                        input(type='range' id='notm-slider' name='notmslider' min='0' max='1500' step='100')
+                            br
+                            center
+                                div.row
+                                    button(type='submit' name='btn_aggiorna' class='col s12 waves-effect waves-light btn blue darken-4' style='border-radius: 20px;') Salva
+
+                div.modal-footer
+                    a(href='#!')
+                    .modal-close.waves-effect.waves-green.btn-flat Annulla
+
+        //Modal Conferma uscita
+        div.modal#confermauscita
+            div.modal-content
+                h4 Sei sicuro di voler uscire?
+            div.modal-footer
+                a(href='/logout' style='border-radius: 20px;').waves-effect.waves-light.btn.blue.darken-4 LOGOUT
+                a(href='#!').modal-close.waves-effect.waves-green.btn-flat Annulla
