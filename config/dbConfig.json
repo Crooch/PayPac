@@ -1,9 +1,9 @@
 {
   "development": {
-    "username": "paypac",
-    "password": "CaLoSc",
-    "database": "paypac",
-    "host": "192.168.33.10",
+    "username": "b6a1b2e9a68c32",
+    "password": "f45a7488",
+    "database": "heroku_0a0eab252cf81e6",
+    "host": "us-cdbr-iron-east-04.cleardb.net",
     "dialect": "mysql",
     "define": {
       "timestamps": false
